@@ -37,17 +37,17 @@ func fetch() {
 	cmap := make(map[string]*arlo.Camera)
 
 	logger.Println("looking for cameras on account")
-	for _, camera := range api.Cameras {
-		logger.Printf("found camera %q (id: %s)", camera.DeviceName, camera.DeviceId)
-		name := reStripName.ReplaceAllString(camera.DeviceName, "_")
+	for i := 0; i < len(api.Cameras); i++ {
+		logger.Printf("found camera %q (id: %s)", api.Cameras[i].DeviceName, api.Cameras[i].DeviceId)
+		name := reStripName.ReplaceAllString(api.Cameras[i].DeviceName, "_")
 		name = reTrimUnderscore.ReplaceAllString(name, "_")
 		name = strings.Trim(name, "_")
-		if name != camera.DeviceName {
-			logger.Printf("renaming %q to %q", camera.DeviceName, name)
-			camera.DeviceName = name
+		if name != api.Cameras[i].DeviceName {
+			logger.Printf("renaming %q to %q", api.Cameras[i].DeviceName, name)
+			api.Cameras[i].DeviceName = name
 		}
 
-		cmap[camera.DeviceId] = &camera
+		cmap[api.Cameras[i].DeviceId] = &api.Cameras[i]
 	}
 
 	now := time.Now()
@@ -71,22 +71,22 @@ func fetch() {
 	for _, recording := range *library {
 		pool.Slot()
 
-		rtmpl := &RecordingTemplate{
-			Recording: &recording,
-			Camera:    cmap[recording.DeviceId],
-			Timestamp: time.Unix(0, recording.UtcCreatedDate*int64(time.Millisecond)).Format(("2006.01.02-15.04.05")),
-		}
-
-		filename := strings.Builder{}
-		tpl := template.Must(template.New("filename").Parse(cli.NameFormat))
-		if err := tpl.Execute(&filename, rtmpl); err != nil {
-			logger.Fatalf("error executing filename template for recording %q: %v", recording.UniqueId, err)
-		}
-
-		go func(r arlo.Recording, fn string) {
+		go func(r arlo.Recording) {
 			defer pool.Free()
 
-			fullFn := filepath.Join(cli.OutputDir, fn)
+			rtmpl := &RecordingTemplate{
+				Recording: &r,
+				Camera:    cmap[r.DeviceId],
+				Timestamp: time.Unix(0, r.UtcCreatedDate*int64(time.Millisecond)).Format(("2006.01.02-15.04.05")),
+			}
+
+			filename := strings.Builder{}
+			tpl := template.Must(template.New("filename").Parse(cli.NameFormat))
+			if err := tpl.Execute(&filename, rtmpl); err != nil {
+				logger.Fatalf("error executing filename template for recording %q: %v", r.UniqueId, err)
+			}
+
+			fullFn := filepath.Join(cli.OutputDir, filename.String())
 
 			if _, err := os.Stat(fullFn); err == nil {
 				logger.Printf("skipping %s/%s, already downloaded", rtmpl.Camera.DeviceName, r.Name)
@@ -104,7 +104,7 @@ func fetch() {
 				logger.Fatal(err)
 			}
 			logger.Printf("finished downloading %q", r.Name)
-		}(recording, filename.String())
+		}(recording)
 	}
 
 	pool.Wait()
