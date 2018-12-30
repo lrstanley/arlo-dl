@@ -5,6 +5,7 @@
 </p>
 
 ## Table of Contents
+- [Features](#features)
 - [Installation](#installation)
   - [Windows](#windows)
   - [Ubuntu/Debian](#ubuntudebian)
@@ -12,9 +13,17 @@
   - [Manual Install](#manual-install)
   - [Build from source](#build-from-source)
 - [Usage](#usage)
+  - [Example](#example)
 - [Contributing](#contributing)
 - [TODO](#todo)
 - [License](#license)
+
+## Features
+
+   * Allows downloading Arlo recordings, for all cameras.
+   * Efficient: concurrency support, and will not re-download a recording that
+   was already downloaded.
+   * Configurable filenames, download location and timeframe.
 
 ## Installation
 
@@ -67,21 +76,93 @@ Note that you must have [Go](https://golang.org/doc/install) installed (`v1.11.1
 
 ## Usage
 
-The default configuration path is `/etc/arlo-dl.yaml` when using `deb`/`rpm`.
-If you are not using these package formats, copy the example config file,
-`example.arlo-dl.yaml`, to `arlo-dl.yaml`.
-
 ```
-$ ./arlo-dl --help
+$ ./arlo-dl -h
 Usage:
-  arlo-dl [OPTIONS]
+  arlo-dl [OPTIONS] [setup]
 
 Application Options:
-  -l, --log-path=PATH    Optional path to log output to
-  -c, --config=PATH      Path to configuration file (default: ./arlo-dl.yaml)
+  -c, --config-file=    configuration file (see 'arlo-dl setup', default: $HOME/.arlo-dl.yaml)
+  -o, --output-dir=     location to store recordings (default: arlo-recordings)
+      --history=        how many days back to download (default: 14)
+  -q, --quiet           don't log to stdout
+  -v, --version         display the version of arlo-dl and exit
+  -C, --max-concurrent= maximum amount of recordings to download concurrently (default: 2)
+  -f, --name-format=    go-template format for the file name (default: {{.Camera.DeviceName}}-{{.Timestamp}}-{{.Recording.Name}}.mp4)
 
 Help Options:
-  -h, --help             Show this help message
+  -h, --help            Show this help message
+
+Available commands:
+  setup  generate a config for use with arlo-dl
+```
+
+### Example
+
+```console
+$ arlo-dl setup
+? What is your Arlo username/email? user@domain.com
+? What is your Arlo password? *******
+validating login...
+successfully wrote "/home/myuser/.arlo-dl.yaml"
+```
+
+```console
+$ arlo-dl
+2018/12/29 23:59:44 reading config at "/home/myuser/.arlo-dl.yaml"
+2018/12/29 23:59:44 logging into arlo with account: user@domain.com
+2018/12/29 23:59:51 login successful
+2018/12/29 23:59:51 looking for cameras on account
+2018/12/29 23:59:51 found camera "Garage" (id: 5EM1847KA246A)
+2018/12/29 23:59:51 found camera "Front door" (id: 5EM1847PA9866)
+2018/12/29 23:59:51 renaming "Front door" to "Front_door"
+2018/12/29 23:59:51 fetching library
+2018/12/29 23:59:52 successfully fetched library; 12 items found
+2018/12/29 23:59:52 streaming recording Front_door/1546144499779 to file: "arlo-recordings/Front_door-2018.12.29-23.34.59-1546144499779.mp4"
+2018/12/29 23:59:52 streaming recording Front_door/1546120422020 to file: "arlo-recordings/Front_door-2018.12.29-16.53.42-1546120422020.mp4"
+2018/12/29 23:59:54 finished downloading "1546120422020"
+2018/12/29 23:59:54 streaming recording Front_door/1546120087364 to file: "arlo-recordings/Front_door-2018.12.29-16.48.07-1546120087364.mp4"
+2018/12/29 23:59:54 finished downloading "1546120087364"
+2018/12/29 23:59:54 streaming recording Front_door/1546119340985 to file: "arlo-recordings/Front_door-2018.12.29-16.35.40-1546119340985.mp4"
+2018/12/29 23:59:55 finished downloading "1546144499779"
+2018/12/29 23:59:55 streaming recording Front_door/1546117683470 to file: "arlo-recordings/Front_door-2018.12.29-16.08.03-1546117683470.mp4"
+2018/12/29 23:59:55 finished downloading "1546119340985"
+2018/12/29 23:59:55 streaming recording Front_door/1546117208334 to file: "arlo-recordings/Front_door-2018.12.29-16.00.08-1546117208334.mp4"
+2018/12/29 23:59:55 finished downloading "1546117683470"
+2018/12/29 23:59:55 streaming recording Front_door/1546112259159 to file: "arlo-recordings/Front_door-2018.12.29-14.37.39-1546112259159.mp4"
+2018/12/29 23:59:55 finished downloading "1546117208334"
+2018/12/29 23:59:55 streaming recording Front_door/1546112144203 to file: "arlo-recordings/Front_door-2018.12.29-14.35.44-1546112144203.mp4"
+2018/12/29 23:59:55 finished downloading "1546112259159"
+2018/12/29 23:59:55 streaming recording Front_door/1546109227584 to file: "arlo-recordings/Front_door-2018.12.29-13.47.07-1546109227584.mp4"
+2018/12/29 23:59:56 finished downloading "1546112144203"
+2018/12/29 23:59:56 streaming recording Front_door/1546108982638 to file: "arlo-recordings/Front_door-2018.12.29-13.43.02-1546108982638.mp4"
+2018/12/29 23:59:56 finished downloading "1546109227584"
+2018/12/29 23:59:56 streaming recording Front_door/1546107734692 to file: "arlo-recordings/Front_door-2018.12.29-13.22.14-1546107734692.mp4"
+2018/12/29 23:59:57 finished downloading "1546108982638"
+2018/12/29 23:59:57 streaming recording Front_door/1546107714995 to file: "arlo-recordings/Front_door-2018.12.29-13.21.54-1546107714995.mp4"
+2018/12/29 23:59:57 finished downloading "1546107734692"
+2018/12/29 23:59:57 finished downloading "1546107714995"
+```
+
+And, whala!
+
+```console
+$ tree arlo-recordings/
+arlo-recordings/
+├── Front_door-2018.12.29-13.21.54-1546107714995.mp4
+├── Front_door-2018.12.29-13.22.14-1546107734692.mp4
+├── Front_door-2018.12.29-13.43.02-1546108982638.mp4
+├── Front_door-2018.12.29-13.47.07-1546109227584.mp4
+├── Front_door-2018.12.29-14.35.44-1546112144203.mp4
+├── Front_door-2018.12.29-14.37.39-1546112259159.mp4
+├── Front_door-2018.12.29-16.00.08-1546117208334.mp4
+├── Front_door-2018.12.29-16.08.03-1546117683470.mp4
+├── Front_door-2018.12.29-16.35.40-1546119340985.mp4
+├── Front_door-2018.12.29-16.48.07-1546120087364.mp4
+├── Front_door-2018.12.29-16.53.42-1546120422020.mp4
+└── Front_door-2018.12.29-23.34.59-1546144499779.mp4
+
+0 directories, 12 files
 ```
 
 ## Contributing
