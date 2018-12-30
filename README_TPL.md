@@ -109,60 +109,41 @@ successfully wrote "/home/myuser/.arlo-dl.yaml"
 
 ```console
 $ arlo-dl
-2018/12/29 23:59:44 reading config at "/home/myuser/.arlo-dl.yaml"
-2018/12/29 23:59:44 logging into arlo with account: user@domain.com
-2018/12/29 23:59:51 login successful
-2018/12/29 23:59:51 looking for cameras on account
-2018/12/29 23:59:51 found camera "Garage" (id: 5EM1847KA246A)
-2018/12/29 23:59:51 found camera "Front door" (id: 5EM1847PA9866)
-2018/12/29 23:59:51 renaming "Front door" to "Front_door"
-2018/12/29 23:59:51 fetching library
-2018/12/29 23:59:52 successfully fetched library; 12 items found
-2018/12/29 23:59:52 streaming recording Front_door/1546144499779 to file: "arlo-recordings/Front_door-2018.12.29-23.34.59-1546144499779.mp4"
-2018/12/29 23:59:52 streaming recording Front_door/1546120422020 to file: "arlo-recordings/Front_door-2018.12.29-16.53.42-1546120422020.mp4"
-2018/12/29 23:59:54 finished downloading "1546120422020"
-2018/12/29 23:59:54 streaming recording Front_door/1546120087364 to file: "arlo-recordings/Front_door-2018.12.29-16.48.07-1546120087364.mp4"
-2018/12/29 23:59:54 finished downloading "1546120087364"
-2018/12/29 23:59:54 streaming recording Front_door/1546119340985 to file: "arlo-recordings/Front_door-2018.12.29-16.35.40-1546119340985.mp4"
-2018/12/29 23:59:55 finished downloading "1546144499779"
-2018/12/29 23:59:55 streaming recording Front_door/1546117683470 to file: "arlo-recordings/Front_door-2018.12.29-16.08.03-1546117683470.mp4"
-2018/12/29 23:59:55 finished downloading "1546119340985"
-2018/12/29 23:59:55 streaming recording Front_door/1546117208334 to file: "arlo-recordings/Front_door-2018.12.29-16.00.08-1546117208334.mp4"
-2018/12/29 23:59:55 finished downloading "1546117683470"
-2018/12/29 23:59:55 streaming recording Front_door/1546112259159 to file: "arlo-recordings/Front_door-2018.12.29-14.37.39-1546112259159.mp4"
-2018/12/29 23:59:55 finished downloading "1546117208334"
-2018/12/29 23:59:55 streaming recording Front_door/1546112144203 to file: "arlo-recordings/Front_door-2018.12.29-14.35.44-1546112144203.mp4"
-2018/12/29 23:59:55 finished downloading "1546112259159"
-2018/12/29 23:59:55 streaming recording Front_door/1546109227584 to file: "arlo-recordings/Front_door-2018.12.29-13.47.07-1546109227584.mp4"
-2018/12/29 23:59:56 finished downloading "1546112144203"
-2018/12/29 23:59:56 streaming recording Front_door/1546108982638 to file: "arlo-recordings/Front_door-2018.12.29-13.43.02-1546108982638.mp4"
-2018/12/29 23:59:56 finished downloading "1546109227584"
-2018/12/29 23:59:56 streaming recording Front_door/1546107734692 to file: "arlo-recordings/Front_door-2018.12.29-13.22.14-1546107734692.mp4"
-2018/12/29 23:59:57 finished downloading "1546108982638"
-2018/12/29 23:59:57 streaming recording Front_door/1546107714995 to file: "arlo-recordings/Front_door-2018.12.29-13.21.54-1546107714995.mp4"
-2018/12/29 23:59:57 finished downloading "1546107734692"
-2018/12/29 23:59:57 finished downloading "1546107714995"
+2018/12/30 02:41:34 reading config at "/home/myuser/.arlo-dl.yaml"
+2018/12/30 02:41:34 logging into arlo with account: user@domain.com
+2018/12/30 02:41:43 login successful
+2018/12/30 02:41:43 looking for cameras on account
+2018/12/30 02:41:43 found camera "Garage" (id: 5EM1847KA246A)
+2018/12/30 02:41:43 found camera "Front door" (id: 5EM1847PA9866)
+2018/12/30 02:41:43 renaming "Front door" to "Front_door"
+2018/12/30 02:41:43 fetching library
+2018/12/30 02:41:44 successfully fetched library; 7 items found
+2018/12/30 02:41:44 skipping Front_door/1546120422020, already downloaded
+2018/12/30 02:41:44 skipping Front_door/1546144499779, already downloaded
+2018/12/30 02:41:44 skipping Front_door/1546119340985, already downloaded
+2018/12/30 02:41:44 streaming recording Garage/1546112259159 to file: "arlo-recordings/Garage-2018.12.29-14.37.39-1546112259159.mp4"
+2018/12/30 02:41:44 streaming recording Garage/1546112144203 to file: "arlo-recordings/Garage-2018.12.29-14.35.44-1546112144203.mp4"
+2018/12/30 02:41:45 finished downloading "1546112144203"
+2018/12/30 02:41:45 streaming recording Garage/1546107734692 to file: "arlo-recordings/Garage-2018.12.29-13.22.14-1546107734692.mp4"
+2018/12/30 02:41:45 finished downloading "1546112259159"
+2018/12/30 02:41:45 skipping Front_door/1546107714995, already downloaded
+2018/12/30 02:41:46 finished downloading "1546107734692"
 ```
 
 And, whala!
 
 ```console
-$ tree arlo-recordings/
+$ $ tree arlo-recordings/
 arlo-recordings/
 ├── Front_door-2018.12.29-13.21.54-1546107714995.mp4
-├── Front_door-2018.12.29-13.22.14-1546107734692.mp4
-├── Front_door-2018.12.29-13.43.02-1546108982638.mp4
-├── Front_door-2018.12.29-13.47.07-1546109227584.mp4
-├── Front_door-2018.12.29-14.35.44-1546112144203.mp4
-├── Front_door-2018.12.29-14.37.39-1546112259159.mp4
-├── Front_door-2018.12.29-16.00.08-1546117208334.mp4
-├── Front_door-2018.12.29-16.08.03-1546117683470.mp4
 ├── Front_door-2018.12.29-16.35.40-1546119340985.mp4
-├── Front_door-2018.12.29-16.48.07-1546120087364.mp4
 ├── Front_door-2018.12.29-16.53.42-1546120422020.mp4
-└── Front_door-2018.12.29-23.34.59-1546144499779.mp4
+├── Front_door-2018.12.29-23.34.59-1546144499779.mp4
+├── Garage-2018.12.29-13.22.14-1546107734692.mp4
+├── Garage-2018.12.29-14.35.44-1546112144203.mp4
+└── Garage-2018.12.29-14.37.39-1546112259159.mp4
 
-0 directories, 12 files
+0 directories, 7 files
 ```
 
 ## Contributing
