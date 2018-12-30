@@ -38,7 +38,7 @@ clean: ## Cleans up generated files/folders from the build.
 	/bin/rm -rfv "dist/" "${BINARY}"
 
 build: fetch clean ## Compile and generate a binary.
-	go build -ldflags '-d -s -w' -tags netgo -installsuffix netgo -v -x -o "${BINARY}"
+	go build -ldflags '-s -w' -tags netgo -installsuffix netgo -v -o "${BINARY}"
 
 debug: fetch clean
 	go run *.go
