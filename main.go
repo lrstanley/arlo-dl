@@ -30,7 +30,7 @@ type Flags struct {
 	Quiet         bool   `short:"q" long:"quiet" description:"don't log to stdout"`
 	VersionFlag   bool   `short:"v" long:"version" description:"display the version of arlo-dl and exit"`
 	MaxConcurrent int    `short:"C" long:"max-concurrent" description:"maximum amount of recordings to download concurrently" default:"2"`
-	NameFormat    string `short:"f" long:"name-format" description:"go-template format for the file name" default:"{{.Camera.DeviceName}}-{{.Timestamp}}-{{.Recording.Name}}.mp4"`
+	NameFormat    string `short:"f" long:"name-format" description:"go-template format for the file name" default:"{{.Camera.DeviceName}}/{{.Time.Year}}/{{.Time.Month}}/{{.Timestamp}}-{{.Recording.Name}}.mp4"`
 
 	CommandSetup CommandSetup `command:"setup" description:"generate a config for use with arlo-dl"`
 }

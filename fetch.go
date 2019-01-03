@@ -23,6 +23,7 @@ var (
 type RecordingTemplate struct {
 	Recording *arlo.Recording
 	Camera    *arlo.Camera
+	Time      time.Time
 	Timestamp string
 }
 
@@ -60,12 +61,6 @@ func fetch() {
 	}
 	logger.Printf("successfully fetched library; %d items found", len(*library))
 
-	if len(*library) > 0 {
-		if err := os.MkdirAll(cli.OutputDir, 0755); err != nil {
-			logger.Fatalf("error creating dir %q: %v", cli.OutputDir, err)
-		}
-	}
-
 	pool := sempool.New(cli.MaxConcurrent)
 
 	for _, recording := range *library {
@@ -77,8 +72,9 @@ func fetch() {
 			rtmpl := &RecordingTemplate{
 				Recording: &r,
 				Camera:    cmap[r.DeviceId],
-				Timestamp: time.Unix(0, r.UtcCreatedDate*int64(time.Millisecond)).Format(("2006.01.02-15.04.05")),
+				Time:      time.Unix(0, r.UtcCreatedDate*int64(time.Millisecond)),
 			}
+			rtmpl.Timestamp = rtmpl.Time.Format("2006.01.02-15.04.05")
 
 			filename := strings.Builder{}
 			tpl := template.Must(template.New("filename").Parse(cli.NameFormat))
@@ -87,6 +83,10 @@ func fetch() {
 			}
 
 			fullFn := filepath.Join(cli.OutputDir, filename.String())
+
+			if err := os.MkdirAll(filepath.Dir(fullFn), 0755); err != nil {
+				logger.Fatalf("error creating dir %q: %v", filepath.Dir(fullFn), err)
+			}
 
 			if _, err := os.Stat(fullFn); err == nil {
 				logger.Printf("skipping %s/%s, already downloaded", rtmpl.Camera.DeviceName, r.Name)
