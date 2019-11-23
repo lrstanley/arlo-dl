@@ -32,13 +32,13 @@ readme-gen: ## Generates readme from template file.
 	cp -av "${RSRC}" "${ROUT}"
 	sed -ri -e "s:\[\[tag\]\]:${VERSION}:g" -e "s:\[\[os\]\]:linux:g" -e "s:\[\[arch\]\]:amd64:g" "${ROUT}"
 
-snapshot: clean fetch generate ## Generate a snapshot release.
+snapshot: clean fetch ## Generate a snapshot release.
 	$(BIN)/goreleaser --snapshot --skip-validate --skip-publish
 
-release: clean fetch generate ## Generate a release, but don't publish to GitHub.
+release: clean fetch ## Generate a release, but don't publish to GitHub.
 	$(BIN)/goreleaser --skip-validate --skip-publish
 
-publish: clean fetch generate ## Generate a release, and publish to GitHub.
+publish: clean fetch ## Generate a release, and publish to GitHub.
 	$(BIN)/goreleaser
 
 clean: ## Cleans up generated files/folders from the build.
