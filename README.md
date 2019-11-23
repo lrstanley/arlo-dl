@@ -33,35 +33,35 @@ the utility.
 
 ### Windows
 
-Download [the zip here](https://liam.sh/ghr/arlo-dl_0.0.3_windows_amd64.zip).
+Download [the zip here](https://liam.sh/ghr/arlo-dl_0.0.4_windows_amd64.zip).
 
 ### Ubuntu/Debian
 
 ```bash
-$ wget https://liam.sh/ghr/arlo-dl_0.0.3_linux_amd64.deb
-$ dpkg -i arlo-dl_0.0.3_linux_amd64.deb
+$ wget https://liam.sh/ghr/arlo-dl_0.0.4_linux_amd64.deb
+$ dpkg -i arlo-dl_0.0.4_linux_amd64.deb
 $ arlo-dl --help
 ```
 
 ### CentOS/Redhat
 
 ```bash
-$ yum localinstall https://liam.sh/ghr/arlo-dl_0.0.3_linux_amd64.rpm
+$ yum localinstall https://liam.sh/ghr/arlo-dl_0.0.4_linux_amd64.rpm
 $ arlo-dl --help
 ```
 
 Some older CentOS versions may require (if you get `Cannot open: <url>. Skipping.`):
 
 ```console
-$ wget https://liam.sh/ghr/arlo-dl_0.0.3_linux_amd64.rpm
-$ yum localinstall arlo-dl_0.0.3_linux_amd64.rpm
+$ wget https://liam.sh/ghr/arlo-dl_0.0.4_linux_amd64.rpm
+$ yum localinstall arlo-dl_0.0.4_linux_amd64.rpm
 ```
 
 ### Manual Install
 
 ```bash
-$ wget https://liam.sh/ghr/arlo-dl_0.0.3_linux_amd64.tar.gz
-$ tar -C /usr/bin/ -xzvf arlo-dl_0.0.3_linux_amd64.tar.gz arlo-dl
+$ wget https://liam.sh/ghr/arlo-dl_0.0.4_linux_amd64.tar.gz
+$ tar -C /usr/bin/ -xzvf arlo-dl_0.0.4_linux_amd64.tar.gz arlo-dl
 $ chmod +x /usr/bin/arlo-dl
 $ arlo-dl --help
 ```
