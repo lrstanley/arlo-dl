@@ -1,44 +1,51 @@
 .DEFAULT_GOAL := build
 
-GOPATH := $(shell go env | grep GOPATH | sed 's/GOPATH="\(.*\)"/\1/')
-PATH := $(GOPATH)/bin:$(PATH)
-export $(PATH)
-
-# enable Go 1.11.x module support.
-export GO111MODULE=on
-
+DIRS=bin dist
 BINARY=arlo-dl
-VERSION=$(shell git describe --tags --abbrev=0 2>/dev/null | sed -r "s:^v::g")
+
+VERSION=$(shell git describe --tags --always --abbrev=0 --match=v* 2> /dev/null | sed -r "s:^v::g" || echo 0)
+VERSION_FULL=$(shell git describe --tags --always --dirty --match=v* 2> /dev/null | sed -r "s:^v::g" || echo 0)
+
 RSRC=README_TPL.md
 ROUT=README.md
+
+$(info $(shell mkdir -p $(DIRS)))
+BIN=$(CURDIR)/bin
+export GOBIN=$(CURDIR)/bin
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-12s\033[0m %s\n", $$1, $$2}'
 
-readme-gen: ## Generates readme from template file.
-	cp -av "${RSRC}" "${ROUT}"
-	sed -ri -e "s:\[\[tag\]\]:${VERSION}:g" -e "s:\[\[arch\]\]:amd64:g" "${ROUT}"
-
-snapshot: clean fetch ## Generate a snapshot release.
-	$(GOPATH)/bin/goreleaser release --snapshot --skip-validate --skip-publish
-
-release: clean fetch ## Generate a release, but don't publish to GitHub.
-	$(GOPATH)/bin/goreleaser release --skip-validate --skip-publish
-
-publish: clean fetch ## Generate a release, and publish to GitHub.
-	$(GOPATH)/bin/goreleaser release
-
 fetch: ## Fetches the necessary dependencies to build.
-	test -f $(GOPATH)/bin/goreleaser || go get -u -v github.com/goreleaser/goreleaser
+	which $(BIN)/goreleaser 2>&1 > /dev/null || wget -qO- "https://github.com/goreleaser/goreleaser/releases/download/v0.122.0/goreleaser_Linux_x86_64.tar.gz" | tar -xz -C $(BIN) goreleaser
 	go mod download
 	go mod tidy
 	go mod vendor
 
+upgrade-deps: ## Upgrade all dependencies to the latest version.
+	go get -u ./...
+
+upgrade-deps-patch: ## Upgrade all dependencies to the latest patch release.
+	go get -u=patch ./...
+
+readme-gen: ## Generates readme from template file.
+	cp -av "${RSRC}" "${ROUT}"
+	sed -ri -e "s:\[\[tag\]\]:${VERSION}:g" -e "s:\[\[os\]\]:linux:g" -e "s:\[\[arch\]\]:amd64:g" "${ROUT}"
+
+snapshot: clean fetch generate ## Generate a snapshot release.
+	$(BIN)/goreleaser --snapshot --skip-validate --skip-publish
+
+release: clean fetch generate ## Generate a release, but don't publish to GitHub.
+	$(BIN)/goreleaser --skip-validate --skip-publish
+
+publish: clean fetch generate ## Generate a release, and publish to GitHub.
+	$(BIN)/goreleaser
+
 clean: ## Cleans up generated files/folders from the build.
-	/bin/rm -rfv "dist/" "${BINARY}"
+	/bin/rm -rfv "dist/" "${BINARY}-${VERSION_FULL}"
 
-build: fetch clean ## Compile and generate a binary.
-	go build -ldflags '-s -w' -tags netgo -installsuffix netgo -v -o "${BINARY}"
+build: fetch clean ## Compile and generate a binary with static assets embedded.
+	go build -ldflags '-d -s -w' -tags netgo -installsuffix netgo -v -o "${BINARY}-${VERSION_FULL}"
 
-debug: fetch clean
+debug: clean
 	go run *.go
