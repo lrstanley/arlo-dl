@@ -7,11 +7,6 @@ dist
 *.test
 *.prof
 *.conf
-*.yml
-*.yaml
-!.goreleaser.yml
-!.travis.yml
-vendor/*
 arlo-dl
 arlo-*
 bin

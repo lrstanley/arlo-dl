@@ -1,0 +1,16 @@
+name: release
+
+on:
+  push:
+    tags: [v*]
+
+jobs:
+  docker-release:
+    uses: lrstanley/.github/.github/workflows/docker-release.yml@master
+    secrets:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  go-release:
+    uses: lrstanley/.github/.github/workflows/lang-go-release.yml@master
+    with:
+      has-ghcr: true
+      upload-artifacts: true
