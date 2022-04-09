@@ -47,11 +47,6 @@
 
   - [Features](#sparkles-features)
   - [Installation](#computer-installation)
-    - [Windows](#windows)
-    - [Ubuntu/Debian](#ubuntudebian)
-    - [CentOS/Redhat](#centosredhat)
-    - [Manual Install](#manual-install)
-    - [Source](#gear-source)
   - [Usage](#toolbox-usage)
     - [Example](#example)
   - [Support & Assistance](#raising_hand_man-support-assistance)
