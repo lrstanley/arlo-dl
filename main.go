@@ -5,7 +5,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"os/user"
@@ -37,15 +37,15 @@ type Flags struct {
 
 func (f *Flags) Ensure() {
 	if cli.Quiet {
-		logger.SetOutput(ioutil.Discard)
+		logger.SetOutput(io.Discard)
 	}
 
 	if cli.ConfigFile == "" {
-		user, err := user.Current()
+		usr, err := user.Current()
 		if err != nil {
 			logger.Fatal(err)
 		}
-		cli.ConfigFile = filepath.Join(user.HomeDir, ".arlo-dl.yaml")
+		cli.ConfigFile = filepath.Join(usr.HomeDir, ".arlo-dl.yaml")
 	}
 }
 

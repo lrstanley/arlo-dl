@@ -6,7 +6,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	arlo "github.com/jeffreydwalter/arlo-go"
@@ -32,16 +31,16 @@ func readConfig(path string) error {
 		return err
 	}
 
-	if perms := permbits.FileMode(fi.Mode()); perms != 0600 {
-		logger.Fatalf("error: permissions of %q are insecure: %s, please use 0600", path, perms)
+	if perms := permbits.FileMode(fi.Mode()); perms != 0o600 {
+		logger.Printf("warning: permissions of %q are insecure: %s, please use 0600", path, perms)
 	}
 
-	b, err := ioutil.ReadFile(path)
+	b, err := os.ReadFile(path)
 	if err != nil {
 		return err
 	}
 
-	if err = yaml.Unmarshal(b, conf); err != nil {
+	if err := yaml.Unmarshal(b, conf); err != nil {
 		return err
 	}
 	return nil
@@ -78,7 +77,7 @@ login:
 		goto login
 	}
 
-	f, err := os.OpenFile(cli.ConfigFile, os.O_RDWR|os.O_CREATE, 0600)
+	f, err := os.OpenFile(cli.ConfigFile, os.O_RDWR|os.O_CREATE, 0o600)
 	if err != nil {
 		logger.Fatalf("error creating %q: %v", cli.ConfigFile, err)
 	}

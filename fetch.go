@@ -66,11 +66,11 @@ func fetch() {
 	for _, recording := range *library {
 		pool.Slot()
 
-		go func(r arlo.Recording) {
+		go func(r *arlo.Recording) {
 			defer pool.Free()
 
 			rtmpl := &RecordingTemplate{
-				Recording: &r,
+				Recording: r,
 				Camera:    cmap[r.DeviceId],
 				Time:      time.Unix(0, r.UtcCreatedDate*int64(time.Millisecond)),
 			}
@@ -84,7 +84,7 @@ func fetch() {
 
 			fullFn := filepath.Join(cli.OutputDir, filename.String())
 
-			if err := os.MkdirAll(filepath.Dir(fullFn), 0755); err != nil {
+			if err := os.MkdirAll(filepath.Dir(fullFn), 0o755); err != nil {
 				logger.Fatalf("error creating dir %q: %v", filepath.Dir(fullFn), err)
 			}
 
@@ -104,7 +104,7 @@ func fetch() {
 				logger.Fatal(err)
 			}
 			logger.Printf("finished downloading %q", r.Name)
-		}(recording)
+		}(&recording)
 	}
 
 	pool.Wait()
