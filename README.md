@@ -69,56 +69,12 @@
 ## :computer: Installation
 
 Check out the [releases](https://github.com/lrstanley/arlo-dl/releases)
-page for prebuilt versions. Below are example commands of how you would install
-the utility.
+page for prebuilt versions.
 
 <!-- template:begin:ghcr -->
 <!-- do not edit anything in this "template" block, its auto-generated -->
 
 <!-- template:end:ghcr -->
-
-### Windows
-
-Download [the zip here](https://liam.sh/ghr/arlo-dl_0.0.4_windows_amd64.zip).
-
-### Ubuntu/Debian
-
-```bash
-$ wget https://liam.sh/ghr/arlo-dl_0.0.4_linux_amd64.deb
-$ dpkg -i arlo-dl_0.0.4_linux_amd64.deb
-$ arlo-dl --help
-```
-
-### CentOS/Redhat
-
-```bash
-$ yum localinstall https://liam.sh/ghr/arlo-dl_0.0.4_linux_amd64.rpm
-$ arlo-dl --help
-```
-
-Some older CentOS versions may require (if you get `Cannot open: <url>. Skipping.`):
-
-```console
-$ wget https://liam.sh/ghr/arlo-dl_0.0.4_linux_amd64.rpm
-$ yum localinstall arlo-dl_0.0.4_linux_amd64.rpm
-```
-
-### Manual Install
-
-```bash
-$ wget https://liam.sh/ghr/arlo-dl_0.0.4_linux_amd64.tar.gz
-$ tar -C /usr/bin/ -xzvf arlo-dl_0.0.4_linux_amd64.tar.gz arlo-dl
-$ chmod +x /usr/bin/arlo-dl
-$ arlo-dl --help
-```
-
-### :gear: Source
-
-Note that you must have [Go](https://golang.org/doc/install) installed (`v1.11.1` required).
-
-    $ git clone https://github.com/lrstanley/arlo-dl.git && cd arlo-dl
-    $ make
-    $ ./arlo-dl --help
 
 ## :toolbox: Usage
 
