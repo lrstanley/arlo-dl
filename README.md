@@ -6,7 +6,6 @@
     <img alt="Release Downloads" src="https://img.shields.io/github/downloads/lrstanley/arlo-dl/total?style=flat-square">
   </a>
 
-
   <a href="https://github.com/lrstanley/arlo-dl/actions?query=workflow%3Arelease+event%3Apush">
     <img alt="GitHub Workflow Status (release @ master)" src="https://img.shields.io/github/workflow/status/lrstanley/arlo-dl/release/master?label=release&style=flat-square&event=push">
   </a>
@@ -48,8 +47,8 @@
   - [Features](#sparkles-features)
   - [Installation](#computer-installation)
   - [Usage](#toolbox-usage)
-    - [Example](#example)
-  - [Support & Assistance](#raising_hand_man-support-assistance)
+   - [Example](#example)
+  - [Support &amp; Assistance](#raising_hand_man-support--assistance)
   - [Contributing](#handshake-contributing)
   - [License](#balance_scale-license)
 <!-- template:end:toc -->
