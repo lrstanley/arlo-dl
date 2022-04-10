@@ -47,8 +47,8 @@
   - [Features](#sparkles-features)
   - [Installation](#computer-installation)
   - [Usage](#toolbox-usage)
-    - [Example](#example)
-  - [Support & Assistance](#raising_hand_man-support-assistance)
+   - [Example](#example)
+  - [Support &amp; Assistance](#raising_hand_man-support--assistance)
   - [Contributing](#handshake-contributing)
   - [License](#balance_scale-license)
 <!-- template:end:toc -->
