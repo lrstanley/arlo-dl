@@ -3,50 +3,50 @@
 <p align="center">arlo-dl -- :movie_camera: :camera: cli tool for downloading arlo recordings and saving them to a file (add to a cron!)</p>
 <p align="center">
   <a href="https://github.com/lrstanley/arlo-dl/releases">
-    <img alt="Release Downloads" src="https://img.shields.io/github/downloads/lrstanley/arlo-dl/total?style=flat-square">
+    <img title="Release Downloads" src="https://img.shields.io/github/downloads/lrstanley/arlo-dl/total?style=flat-square">
   </a>
   <a href="https://github.com/lrstanley/arlo-dl/tags">
-    <img alt="Latest Semver Tag" src="https://img.shields.io/github/v/tag/lrstanley/arlo-dl?style=flat-square">
+    <img title="Latest Semver Tag" src="https://img.shields.io/github/v/tag/lrstanley/arlo-dl?style=flat-square">
   </a>
   <a href="https://github.com/lrstanley/arlo-dl/commits/master">
-    <img alt="Last commit" src="https://img.shields.io/github/last-commit/lrstanley/arlo-dl?style=flat-square">
+    <img title="Last commit" src="https://img.shields.io/github/last-commit/lrstanley/arlo-dl?style=flat-square">
   </a>
 
 
 
   <a href="https://github.com/lrstanley/arlo-dl/actions?query=workflow%3Atest+event%3Apush">
-    <img alt="GitHub Workflow Status (test @ master)" src="https://img.shields.io/github/workflow/status/lrstanley/arlo-dl/test/master?label=test&style=flat-square&event=push">
+    <img title="GitHub Workflow Status (test @ master)" src="https://img.shields.io/github/workflow/status/lrstanley/arlo-dl/test/master?label=test&style=flat-square&event=push">
   </a>
 
   <a href="https://codecov.io/gh/lrstanley/arlo-dl">
-    <img alt="Code Coverage" src="https://img.shields.io/codecov/c/github/lrstanley/arlo-dl/master?style=flat-square">
+    <img title="Code Coverage" src="https://img.shields.io/codecov/c/github/lrstanley/arlo-dl/master?style=flat-square">
   </a>
 
   <a href="https://pkg.go.dev/github.com/lrstanley/arlo-dl">
-    <img alt="Go Documentation" src="https://pkg.go.dev/badge/github.com/lrstanley/arlo-dl?style=flat-square">
+    <img title="Go Documentation" src="https://pkg.go.dev/badge/github.com/lrstanley/arlo-dl?style=flat-square">
   </a>
   <a href="https://goreportcard.com/report/github.com/lrstanley/arlo-dl">
-    <img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/lrstanley/arlo-dl?style=flat-square">
+    <img title="Go Report Card" src="https://goreportcard.com/badge/github.com/lrstanley/arlo-dl?style=flat-square">
   </a>
 </p>
 <p align="center">
   <a href="https://github.com/lrstanley/arlo-dl/issues?q=is:open+is:issue+label:bug">
-    <img alt="Bug reports" src="https://img.shields.io/github/issues/lrstanley/arlo-dl/bug?label=issues&style=flat-square">
+    <img title="Bug reports" src="https://img.shields.io/github/issues/lrstanley/arlo-dl/bug?label=issues&style=flat-square">
   </a>
   <a href="https://github.com/lrstanley/arlo-dl/issues?q=is:open+is:issue+label:enhancement">
-    <img alt="Feature requests" src="https://img.shields.io/github/issues/lrstanley/arlo-dl/enhancement?label=feature%20requests&style=flat-square">
+    <img title="Feature requests" src="https://img.shields.io/github/issues/lrstanley/arlo-dl/enhancement?label=feature%20requests&style=flat-square">
   </a>
   <a href="https://github.com/lrstanley/arlo-dl/pulls">
-    <img alt="Open Pull Requests" src="https://img.shields.io/github/issues-pr/lrstanley/arlo-dl?style=flat-square">
+    <img title="Open Pull Requests" src="https://img.shields.io/github/issues-pr/lrstanley/arlo-dl?label=prs&style=flat-square">
   </a>
   <a href="https://github.com/lrstanley/arlo-dl/releases">
-    <img alt="Latest Semver Release" src="https://img.shields.io/github/v/release/lrstanley/arlo-dl?style=flat-square">
-    <img alt="Latest Release Date" src="https://img.shields.io/github/release-date/lrstanley/arlo-dl?style=flat-square">
+    <img title="Latest Semver Release" src="https://img.shields.io/github/v/release/lrstanley/arlo-dl?style=flat-square">
+    <img title="Latest Release Date" src="https://img.shields.io/github/release-date/lrstanley/arlo-dl?label=date&style=flat-square">
   </a>
   <a href="https://github.com/lrstanley/arlo-dl/discussions/new?category=q-a">
-    <img alt="Ask a Question" src="https://img.shields.io/badge/discussions-ask_a_question!-blue?style=flat-square">
+    <img title="Ask a Question" src="https://img.shields.io/badge/support-ask_a_question!-blue?style=flat-square">
   </a>
-  <a href="https://liam.sh/chat"><img src="https://img.shields.io/badge/discord-bytecord-blue.svg?style=flat-square" alt="Discord Chat"></a>
+  <a href="https://liam.sh/chat"><img src="https://img.shields.io/badge/discord-bytecord-blue.svg?style=flat-square" title="Discord Chat"></a>
 </p>
 <!-- template:end:header -->
 
