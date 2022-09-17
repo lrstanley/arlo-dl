@@ -1,7 +1,13 @@
+<!-- template:define:options
+{
+  "nodescription": true
+}
+-->
+![logo](https://liam.sh/-/gh/svg/lrstanley/arlo-dl?icon.height=100&icon=uil%3Acamera-change&layout=left)
+
 <!-- template:begin:header -->
 <!-- do not edit anything in this "template" block, its auto-generated -->
 
-<p align="center">arlo-dl -- :movie_camera: :camera: cli tool for downloading arlo recordings and saving them to a file (add to a cron!)</p>
 <p align="center">
   <a href="https://github.com/lrstanley/arlo-dl/releases">
     <img title="Release Downloads" src="https://img.shields.io/github/downloads/lrstanley/arlo-dl/total?style=flat-square">
