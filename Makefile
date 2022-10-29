@@ -1,28 +1,52 @@
-.DEFAULT_GOAL := build
+.DEFAULT_GOAL := build-all
 
-BINARY=arlo-dl
+export PROJECT := "arlo-dl"
+export PACKAGE := "github.com/lrstanley/arlo-dl"
 
-help:
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-12s\033[0m %s\n", $$1, $$2}'
+license:
+	curl -sL https://liam.sh/-/gh/g/license-header.sh | bash -s
 
-fetch: ## Fetches the necessary dependencies to build.
+build-all: clean go-fetch go-build
+	@echo
+
+up: go-upgrade-deps
+	@echo
+
+clean:
+	/bin/rm -rfv "dist/" "${PROJECT}"
+
+go-prepare: license go-fetch
+	go generate -x ./...
+
+go-fetch:
 	go mod download
 	go mod tidy
 
-upgrade-deps: ## Upgrade all dependencies to the latest version.
+go-upgrade-deps:
 	go get -u ./...
+	go mod tidy
 
-upgrade-deps-patch: ## Upgrade all dependencies to the latest patch release.
+go-upgrade-deps-patch:
 	go get -u=patch ./...
+	go mod tidy
 
-clean: ## Cleans up generated files/folders from the build.
-	/bin/rm -rfv "dist/" "${BINARY}"
+go-dlv: go-prepare
+	dlv debug \
+		--headless --listen=:2345 \
+		--api-version=2 --log \
+		--allow-non-terminal-interactive \
+		${PACKAGE} --
 
-debug: clean
-	go run *.go
+go-debug: go-prepare
+	go run ${PACKAGE}
 
-prepare: fetch clean
-	@echo
-
-build: prepare ## Compile and generate a binary with static assets embedded.
-	go build -ldflags '-d -s -w' -tags netgo -installsuffix netgo -v -o "${BINARY}"
+go-build: go-prepare go-fetch
+	CGO_ENABLED=0 \
+	go build \
+		-ldflags '-d -s -w -extldflags=-static' \
+		-tags=netgo,osusergo,static_build \
+		-installsuffix netgo \
+		-buildvcs=false \
+		-trimpath \
+		-o ${PROJECT} \
+		${PACKAGE}
