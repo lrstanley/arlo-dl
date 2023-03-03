@@ -104,6 +104,6 @@ Below are a few guidelines if you would like to contribute:
 [discussions]: https://github.com/lrstanley/arlo-dl/discussions
 [issues]: https://github.com/lrstanley/arlo-dl/issues/new/choose
 [license]: https://github.com/lrstanley/arlo-dl/blob/master/LICENSE
-[pull-requests]: https://github.com/lrstanley/arlo-dl/issues/new/choose
+[pull-requests]: https://github.com/lrstanley/arlo-dl/pulls?q=is%3Aopen+is%3Apr
 [security]: https://github.com/lrstanley/arlo-dl/security/policy
 [support]: https://github.com/lrstanley/arlo-dl/blob/master/.github/SUPPORT.md
