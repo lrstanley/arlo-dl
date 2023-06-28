@@ -61,12 +61,12 @@
 <!-- do not edit anything in this "template" block, its auto-generated -->
 ## :link: Table of Contents
 
-  - [Features](#sparkles-features)
+  - [✨ Features](#sparkles-features)
   - [Installation](#computer-installation)
   - [Usage](#toolbox-usage)
     - [Example](#example)
   - [🙋‍♂️ Support &amp; Assistance](#raising_hand_man-support--assistance)
-  - [🤝 Contributing](#handshake-contributing)
+  - [Contributing](#handshake-contributing)
   - [License](#balance_scale-license)
 <!-- template:end:toc -->
 
