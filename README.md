@@ -63,11 +63,11 @@
 
   - [✨ Features](#sparkles-features)
   - [💻 Installation](#computer-installation)
-  - [Usage](#toolbox-usage)
+  - [🧰 Usage](#toolbox-usage)
     - [Example](#example)
   - [Support &amp; Assistance](#raising_hand_man-support--assistance)
   - [Contributing](#handshake-contributing)
-  - [⚖️ License](#balance_scale-license)
+  - [License](#balance_scale-license)
 <!-- template:end:toc -->
 
 ## :sparkles: Features
