@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/apex/log"
 	arlo "github.com/jeffreydwalter/arlo-go"
 	"github.com/phayes/permbits"
 	"gopkg.in/AlecAivazis/survey.v1"
@@ -32,7 +33,10 @@ func readConfig(path string) error {
 	}
 
 	if perms := permbits.FileMode(fi.Mode()); perms != 0o600 {
-		logger.Printf("warning: permissions of %q are insecure: %s, please use 0600", path, perms)
+		logger.WithFields(log.Fields{
+			"path": path,
+			"mode": perms,
+		}).Warn("permissions of config file are insecure, please use 0600")
 	}
 
 	b, err := os.ReadFile(path)
@@ -40,7 +44,8 @@ func readConfig(path string) error {
 		return err
 	}
 
-	if err := yaml.Unmarshal(b, conf); err != nil {
+	err = yaml.Unmarshal(b, conf)
+	if err != nil {
 		return err
 	}
 	return nil
@@ -48,10 +53,7 @@ func readConfig(path string) error {
 
 type CommandSetup struct{}
 
-func (cmd *CommandSetup) Execute(args []string) error {
-	logger.SetFlags(0)
-	cli.Ensure()
-
+func (cmd *CommandSetup) Execute(_ []string) error {
 login:
 	questions := []*survey.Question{
 		{
@@ -70,23 +72,23 @@ login:
 		return err
 	}
 
-	logger.Println("validating login...")
+	logger.Info("validating login")
 	if _, err = arlo.Login(conf.Username, conf.Password); err != nil {
-		logger.Println(err)
-		logger.Println("please enter new credentials")
+		logger.WithError(err).Error("failed to login, please enter new credentials")
 		goto login
 	}
 
-	f, err := os.OpenFile(cli.ConfigFile, os.O_RDWR|os.O_CREATE, 0o600)
+	f, err := os.OpenFile(cli.Flags.ConfigFile, os.O_RDWR|os.O_CREATE, 0o600)
 	if err != nil {
-		logger.Fatalf("error creating %q: %v", cli.ConfigFile, err)
+		logger.Fatalf("error creating %q: %v", cli.Flags.ConfigFile, err)
 	}
 	defer f.Close()
 
-	if _, err := fmt.Fprintf(f, "---\nusername: %s\npassword: %s\n", conf.Username, conf.Password); err != nil {
-		logger.Fatalf("error writing to %q: %v", cli.ConfigFile, err)
+	_, err = fmt.Fprintf(f, "---\nusername: %s\npassword: %s\n", conf.Username, conf.Password)
+	if err != nil {
+		logger.Fatalf("error writing to %q: %v", cli.Flags.ConfigFile, err)
 	}
-	logger.Printf("successfully wrote %q", cli.ConfigFile)
 
+	logger.WithField("config", cli.Flags.ConfigFile).Info("successfully wrote config")
 	return nil
 }

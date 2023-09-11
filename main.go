@@ -4,31 +4,35 @@
 package main
 
 import (
-	"fmt"
-	"io"
-	"log"
-	"os"
 	"os/user"
 	"path/filepath"
 
-	flags "github.com/jessevdk/go-flags"
+	"github.com/apex/log"
+	"github.com/lrstanley/clix"
 )
 
-var (
+const (
 	version = "master"
 	commit  = "latest"
 	date    = "-"
+)
 
-	cli    = &Flags{}
-	logger = log.New(os.Stdout, "", log.LstdFlags)
+var (
+	logger log.Interface
+	cli    = &clix.CLI[Flags]{
+		Links: clix.GithubLinks("github.com/lrstanley/arlo-dl", "master", "https://liam.sh"),
+		VersionInfo: &clix.VersionInfo[Flags]{
+			Version: version,
+			Commit:  commit,
+			Date:    date,
+		},
+	}
 )
 
 type Flags struct {
 	ConfigFile    string `short:"c" long:"config-file" description:"configuration file (see 'arlo-dl setup', default: $HOME/.arlo-dl.yaml)"`
 	OutputDir     string `short:"o" long:"output-dir" description:"location to store recordings" default:"arlo-recordings"`
 	History       int    `long:"history" description:"how many days back to download" default:"14"`
-	Quiet         bool   `short:"q" long:"quiet" description:"don't log to stdout"`
-	VersionFlag   bool   `short:"v" long:"version" description:"display the version of arlo-dl and exit"`
 	MaxConcurrent int    `short:"C" long:"max-concurrent" description:"maximum amount of recordings to download concurrently" default:"2"`
 	NameFormat    string `short:"f" long:"name-format" description:"go-template format for the file name" default:"{{.Camera.DeviceName}}/{{.Time.Year}}/{{.Time.Month}}/{{.Timestamp}}-{{.Recording.Name}}.mp4"`
 
@@ -36,37 +40,30 @@ type Flags struct {
 }
 
 func (f *Flags) Ensure() {
-	if cli.Quiet {
-		logger.SetOutput(io.Discard)
-	}
-
-	if cli.ConfigFile == "" {
+	if cli.Flags.ConfigFile == "" {
 		usr, err := user.Current()
 		if err != nil {
-			logger.Fatal(err)
+			logger.WithError(err).Fatal("failed to get current user")
 		}
-		cli.ConfigFile = filepath.Join(usr.HomeDir, ".arlo-dl.yaml")
+		cli.Flags.ConfigFile = filepath.Join(usr.HomeDir, ".arlo-dl.yaml")
 	}
 }
 
 func main() {
-	var err error
-	parser := flags.NewParser(cli, flags.HelpFlag)
-	parser.SubcommandsOptional = true
-	if _, err = parser.Parse(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
+	cli.LoggerConfig.Pretty = true
+	_ = cli.ParseWithInit(func() error {
+		logger = cli.Logger
+		cli.Flags.Ensure()
 
-	cli.Ensure()
+		return nil
+	}, clix.OptSubcommandsOptional)
 
-	if parser.Active != nil {
-		os.Exit(0)
-	}
+	logger = cli.Logger
+	cli.Flags.Ensure()
 
-	logger.Printf("reading config at %q", cli.ConfigFile)
-	if err = readConfig(cli.ConfigFile); err != nil {
-		logger.Fatalf("error reading config: %v", err)
+	logger.WithField("config", cli.Flags.ConfigFile).Info("reading config")
+	if err := readConfig(cli.Flags.ConfigFile); err != nil {
+		logger.WithError(err).Fatal("failed to read config")
 	}
 
 	fetch()

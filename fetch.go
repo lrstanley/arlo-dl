@@ -11,6 +11,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/apex/log"
 	arlo "github.com/jeffreydwalter/arlo-go"
 	sempool "github.com/lrstanley/go-sempool"
 )
@@ -28,23 +29,31 @@ type RecordingTemplate struct {
 }
 
 func fetch() {
-	logger.Printf("logging into arlo with account: %s", conf.Username)
+	logger.WithField("account", conf.Username).Info("logging into arlo")
 	api, err := arlo.Login(conf.Username, conf.Password)
 	if err != nil {
 		logger.Fatalf("failed to login: %s\n", err)
 	}
-	logger.Println("login successful")
+	logger.Info("successfully logged in")
 
 	cmap := make(map[string]*arlo.Camera)
 
-	logger.Println("looking for cameras on account")
+	logger.Info("looking for cameras on account")
 	for i := 0; i < len(api.Cameras); i++ {
-		logger.Printf("found camera %q (id: %s)", api.Cameras[i].DeviceName, api.Cameras[i].DeviceId)
+		logger.WithFields(log.Fields{
+			"name": api.Cameras[i].DeviceName,
+			"id":   api.Cameras[i].DeviceId,
+		}).Info("found camera")
+
 		name := reStripName.ReplaceAllString(api.Cameras[i].DeviceName, "_")
 		name = reTrimUnderscore.ReplaceAllString(name, "_")
 		name = strings.Trim(name, "_")
 		if name != api.Cameras[i].DeviceName {
-			logger.Printf("renaming %q to %q", api.Cameras[i].DeviceName, name)
+			logger.WithFields(log.Fields{
+				"old": api.Cameras[i].DeviceName,
+				"new": name,
+			}).Info("renaming camera")
+
 			api.Cameras[i].DeviceName = name
 		}
 
@@ -52,18 +61,18 @@ func fetch() {
 	}
 
 	now := time.Now()
-	start := now.Add(-time.Duration(cli.History) * 24 * time.Hour)
+	start := now.Add(-time.Duration(cli.Flags.History) * 24 * time.Hour)
 
-	logger.Println("fetching library")
+	logger.Info("fetching library")
 	library, err := api.GetLibrary(start, now)
 	if err != nil {
-		logger.Fatal(err)
+		logger.WithError(err).Fatal("failed to fetch library")
 	}
-	logger.Printf("successfully fetched library; %d items found", len(*library))
+	logger.WithField("count", len(*library)).Info("successfully fetched library")
 
-	pool := sempool.New(cli.MaxConcurrent)
+	pool := sempool.New(cli.Flags.MaxConcurrent)
 
-	for _, recording := range *library {
+	for _, recording := range *library { // nolint:gocritic
 		pool.Slot()
 
 		go func(r *arlo.Recording) {
@@ -77,34 +86,47 @@ func fetch() {
 			rtmpl.Timestamp = rtmpl.Time.Format("2006.01.02-15.04.05")
 
 			filename := strings.Builder{}
-			tpl := template.Must(template.New("filename").Parse(cli.NameFormat))
-			if err := tpl.Execute(&filename, rtmpl); err != nil {
+			tpl := template.Must(template.New("filename").Parse(cli.Flags.NameFormat))
+
+			err = tpl.Execute(&filename, rtmpl)
+			if err != nil {
 				logger.Fatalf("error executing filename template for recording %q: %v", r.UniqueId, err)
 			}
 
-			fullFn := filepath.Join(cli.OutputDir, filename.String())
+			fullFn := filepath.Join(cli.Flags.OutputDir, filename.String())
 
-			if err := os.MkdirAll(filepath.Dir(fullFn), 0o755); err != nil {
+			err = os.MkdirAll(filepath.Dir(fullFn), 0o755)
+			if err != nil {
 				logger.Fatalf("error creating dir %q: %v", filepath.Dir(fullFn), err)
 			}
 
-			if _, err := os.Stat(fullFn); err == nil {
-				logger.Printf("skipping %s/%s, already downloaded", rtmpl.Camera.DeviceName, r.Name)
+			_, err = os.Stat(fullFn)
+			if err == nil {
+				logger.WithFields(log.Fields{
+					"camera": rtmpl.Camera.DeviceName,
+					"name":   r.Name,
+				}).Info("skipping, already downloaded")
 				return
 			}
 
-			f, err := os.Create(fullFn)
+			var f *os.File
+			f, err = os.Create(fullFn)
 			if err != nil {
-				logger.Fatal(err)
+				logger.WithError(err).Fatal("failed to create file")
 			}
 			defer f.Close()
 
-			logger.Printf("streaming recording %s/%s to file: %q", rtmpl.Camera.DeviceName, r.Name, fullFn)
-			if err := api.DownloadFile(r.PresignedContentUrl, f); err != nil {
-				logger.Fatal(err)
+			logger.WithFields(log.Fields{
+				"camera": rtmpl.Camera.DeviceName,
+				"name":   r.Name,
+			}).Info("downloading")
+
+			err = api.DownloadFile(r.PresignedContentUrl, f)
+			if err != nil {
+				logger.WithError(err).Fatal("failed to download file")
 			}
-			logger.Printf("finished downloading %q", r.Name)
-		}(&recording)
+			logger.WithField("name", r.Name).Info("finished downloading")
+		}(&recording) // nolint:gosec
 	}
 
 	pool.Wait()
